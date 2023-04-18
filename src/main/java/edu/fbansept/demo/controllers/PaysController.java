@@ -1,7 +1,9 @@
 package edu.fbansept.demo.controllers;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import edu.fbansept.demo.dao.PaysDao;
 import edu.fbansept.demo.models.Pays;
+import edu.fbansept.demo.views.VuePays;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +19,7 @@ public class PaysController {
     private PaysDao paysDao;
 
     @GetMapping("/liste-pays")
+    @JsonView(VuePays.class)
     public List<Pays> getPays() {
 
         List<Pays> listePays = paysDao.findAll();
@@ -24,6 +27,7 @@ public class PaysController {
     }
 
     @GetMapping("/pays/{id}")
+    @JsonView(VuePays.class)
     public ResponseEntity<Pays> getPays(@PathVariable int id) {
         Optional<Pays> optional = paysDao.findById(id);
 
@@ -35,6 +39,7 @@ public class PaysController {
     }
 
     @PostMapping("/pays")
+    @JsonView(VuePays.class)
     public ResponseEntity<Pays> editPays(@RequestBody Pays pays) {
 
         if(pays.getId() != null) {

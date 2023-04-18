@@ -12,19 +12,14 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-public class Pays {
+public class Diplome {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonView({VueUtilisateur.class, VuePays.class})
+    @JsonView({VueUtilisateur.class})
     private Integer id;
 
-    @JsonView({VueUtilisateur.class, VuePays.class})
+    @JsonView({VueUtilisateur.class})
     private String nom;
-
-    @OneToMany(mappedBy = "pays")
-    @JsonView(VuePays.class)
-    private List<Utilisateur> utilisateurs;
-
 
 }
