@@ -1,0 +1,1 @@
+INSERT INTO utilisateur(prenom,nom) VALUES ("Franck","BANSEPT"),("Tom","Sawyer"),("john","Doe");
