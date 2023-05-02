@@ -17,13 +17,18 @@ public class ConfigSecurite extends WebSecurityConfigurerAdapter {
     @Autowired
     private DataSource source;
 
+    @Autowired
+    private AppUserDetailsService userDetailService;
+
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 
-        auth.jdbcAuthentication()
-                .dataSource(source)
-                .usersByUsernameQuery("SELECT login, password, 1 FROM utilisateur WHERE login = ?")
-                .authoritiesByUsernameQuery("SELECT login, IF(admin,'ROLE_ADMIN','ROLE_USER') FROM utilisateur WHERE login = ?");
+        auth.userDetailsService(userDetailService);
+
+//        auth.jdbcAuthentication()
+//                .dataSource(source)
+//                .usersByUsernameQuery("SELECT login, password, 1 FROM utilisateur WHERE login = ?")
+//                .authoritiesByUsernameQuery("SELECT login, IF(admin,'ROLE_ADMIN','ROLE_USER') FROM utilisateur WHERE login = ?");
     }
 
     @Override
@@ -39,4 +44,5 @@ public class ConfigSecurite extends WebSecurityConfigurerAdapter {
     public PasswordEncoder dependancePasswordEncoder() {
         return NoOpPasswordEncoder.getInstance();
     }
+
 }

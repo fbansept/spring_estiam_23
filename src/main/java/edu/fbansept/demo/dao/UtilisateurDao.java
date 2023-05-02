@@ -9,4 +9,6 @@ import java.util.Optional;
 @Repository
 public interface UtilisateurDao extends JpaRepository<Utilisateur,Integer> {
     Optional<Utilisateur> findByPrenom(String prenom);
+
+    Optional<Utilisateur> findByLogin(String login);
 }
