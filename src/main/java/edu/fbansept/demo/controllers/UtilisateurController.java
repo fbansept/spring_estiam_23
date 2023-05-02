@@ -3,21 +3,45 @@ package edu.fbansept.demo.controllers;
 import com.fasterxml.jackson.annotation.JsonView;
 import edu.fbansept.demo.dao.UtilisateurDao;
 import edu.fbansept.demo.models.Utilisateur;
+import edu.fbansept.demo.security.AppUserDetails;
 import edu.fbansept.demo.views.VueUtilisateur;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.prefs.BackingStoreException;
 
 @RestController
 public class UtilisateurController {
 
     @Autowired
     private UtilisateurDao utilisateurDao;
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @PostMapping("/connexion")
+    public ResponseEntity<String> connexion(@RequestBody Utilisateur utilisateur) {
+
+        try {
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+                    utilisateur.getLogin(), utilisateur.getPassword()));
+        } catch (BadCredentialsException e) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+
+        return new ResponseEntity<>("OK", HttpStatus.OK);
+
+
+    }
 
     @GetMapping("/admin/utilisateurs")
     @JsonView(VueUtilisateur.class)

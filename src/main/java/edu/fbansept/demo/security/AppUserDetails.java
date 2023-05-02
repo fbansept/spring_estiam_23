@@ -13,7 +13,7 @@ public class AppUserDetails implements UserDetails {
 
     private Utilisateur utilisateur;
 
-    AppUserDetails(Utilisateur utilisateur) {
+    public AppUserDetails(Utilisateur utilisateur) {
         this.utilisateur = utilisateur;
     }
 

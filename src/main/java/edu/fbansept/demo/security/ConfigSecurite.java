@@ -2,6 +2,7 @@ package edu.fbansept.demo.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -34,15 +35,22 @@ public class ConfigSecurite extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
-        http.authorizeRequests()
-                .antMatchers("/admin/**").hasRole("ADMIN")
-                .anyRequest().authenticated()
-                .and().formLogin();
+        http.csrf().disable()
+                .cors()
+                .and().authorizeRequests()
+                    .antMatchers("/connexion","/inscription").permitAll()
+                    .antMatchers("/admin/**").hasRole("ADMIN")
+                .anyRequest().authenticated();
     }
 
     @Bean
     public PasswordEncoder dependancePasswordEncoder() {
         return NoOpPasswordEncoder.getInstance();
+    }
+
+    @Bean
+    public AuthenticationManager dependanceAuthenticationManager() throws Exception {
+        return authenticationManagerBean();
     }
 
 }
