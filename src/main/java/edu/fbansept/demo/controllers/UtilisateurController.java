@@ -19,7 +19,7 @@ public class UtilisateurController {
     @Autowired
     private UtilisateurDao utilisateurDao;
 
-    @GetMapping("/utilisateurs")
+    @GetMapping("/admin/utilisateurs")
     @JsonView(VueUtilisateur.class)
     public List<Utilisateur> getUtilisateurs() {
 

@@ -27,6 +27,14 @@ public class Utilisateur {
     @JsonView({VueUtilisateur.class, VuePays.class})
     private String nom;
 
+    @JsonView({VueUtilisateur.class, VuePays.class})
+    private String login;
+
+    @JsonView(VueUtilisateur.class)
+    private boolean admin;
+
+    private String password;
+
     @ManyToOne
     @JsonView(VueUtilisateur.class)
     private Pays pays;
