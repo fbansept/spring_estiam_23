@@ -9,6 +9,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.sql.DataSource;
 
@@ -20,6 +21,9 @@ public class ConfigSecurite extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private AppUserDetailsService userDetailService;
+
+    @Autowired
+    private JwtFilter jwtFilter;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -35,12 +39,14 @@ public class ConfigSecurite extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
-        http.csrf().disable()
+        http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+                .csrf().disable()
                 .cors()
                 .and().authorizeRequests()
                     .antMatchers("/connexion","/inscription").permitAll()
                     .antMatchers("/admin/**").hasRole("ADMIN")
-                .anyRequest().authenticated();
+                .anyRequest().authenticated()
+                ;
     }
 
     @Bean

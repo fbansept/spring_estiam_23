@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import edu.fbansept.demo.dao.UtilisateurDao;
 import edu.fbansept.demo.models.Utilisateur;
 import edu.fbansept.demo.security.AppUserDetails;
+import edu.fbansept.demo.security.JwtUtils;
 import edu.fbansept.demo.views.VueUtilisateur;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,18 +29,24 @@ public class UtilisateurController {
     @Autowired
     private AuthenticationManager authenticationManager;
 
+    @Autowired
+    private JwtUtils jwtUtils;
+
     @PostMapping("/connexion")
     public ResponseEntity<String> connexion(@RequestBody Utilisateur utilisateur) {
 
         try {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                    utilisateur.getLogin(), utilisateur.getPassword()));
+            UserDetails userDetails = (UserDetails) authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            utilisateur.getLogin(),
+                            utilisateur.getPassword()))
+                    .getPrincipal();
+
+            return new ResponseEntity<>(jwtUtils.generateJwt(userDetails), HttpStatus.OK);
+
         } catch (BadCredentialsException e) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
-
-        return new ResponseEntity<>("OK", HttpStatus.OK);
-
 
     }
 
